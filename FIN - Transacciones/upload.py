@@ -21,7 +21,7 @@ transaccion_data = [
         "receiver": "client-02",
         "m-made": "50",
         "succesful": "verdadero",
-        "anomalias ": "tipo"
+        "anomalias ": ""
     },{
         "pk": "client-02",
         "sk": "Alejandro",

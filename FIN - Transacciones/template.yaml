@@ -1,0 +1,130 @@
+  
+AWSTemplateFormatVersion : '2010-09-09'
+Transform:
+  - AWS::Serverless-2016-10-31
+
+Parameters:
+  Project: 
+    Type: String
+
+Description: my template
+Resources:
+  MyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: my-lambda-role3
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: my-lambda-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+
+  MyAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: my-api-gateway
+      StageName: prod
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: swagger.yaml
+
+  GetUserLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: get-user-lambda
+      Runtime: python3.6
+      CodeUri: ./build
+      Handler: lambda1.handler
+      Timeout: 30
+      MemorySize: 500
+      Role: !GetAtt MyLambdaRole.Arn
+      Environment:
+         Variables:
+          MY_NAME : enrique
+      Events:
+        GetUsers:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyAPI
+            Path: /users
+            Method: GET
+  
+ 
+  PostLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: post-lambda
+      Runtime: python3.6
+      CodeUri: ./build
+      Handler: lambda3.handler
+      Role: !GetAtt MyLambdaRole.Arn
+      Events:
+        PostUsers:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MyAPI
+            Path: /users/{user_name}
+            Method: POST
+
+MyTable:
+Type: AWS::DynamoDB::Table
+Properties:
+TableName: "some-table"
+
+
+
+
+ProvisionedThroughput:
+
+ReadCapacityUnits: 5
+WriteCapacityUnits: 5
+
+KeySchema:
+
+    - AttributeName: "pk"
+    KeyType: "string"
+    - AttributeName: "sk"
+    KeyType: "strind"
+    AttributeDefinitions:
+    - AttributeName: "money"
+    AttributeType: "number"
+    - AttributeName: "ci"
+    AttributeType: "number"
+    - AttributeName: "c-transaccions"
+    AttributeType: "number"
+    - AttributeName: "m-made"
+    AttributeType: "number"
+    - AttributeName: "sender"
+    AttributeType: "string"
+    - AttributeName: "sender"
+    AttributeType: "string"
+    - AttributeName: "receiver"
+    AttributeType: "string"
+    - AttributeName: "m-sender"
+    AttributeType: "string"
+    - AttributeName: "succesful"
+    AttributeType: "verdadero"
+    - AttributeName: "anomalias"
+    AttributeType: ""
+    
+Outputs:
+  RoleARN:
+    Value: !GetAtt MyLambdaRole.Arn
