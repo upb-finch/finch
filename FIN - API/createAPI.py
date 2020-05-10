@@ -32,16 +32,30 @@ arnl = func['Configuration']['FunctionArn']
 response5 = client.put_method(
     restApiId = response['id'],
     resourceId = response3['id'],
-    httpMethod='POST',
-    authorizationType='AWS_IAM'
+    httpMethod='GET',
+    authorizationType='NONE'
 )
 
 response4 = client.put_integration(
     restApiId = response['id'],
     resourceId = response3['id'],
-    httpMethod = 'POST',
+    httpMethod = 'GET',
     type='AWS',
     integrationHttpMethod='POST',
-    uri='arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-2:591336854477:function:transactions/invocations'
+    uri='arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/'+arnl+'/invocations'
+)
+
+deploy = client.create_deployment(
+    restApiId = response['id'],
+    stageName ='prod'
+)
+
+print('https://'+response['id']+'.execute-api.us-east-2.amazonaws.com/prod')
+
+permi = lam.add_permission(
+    FunctionName=arnl,
+    StatementId='apigateway-finch-aws',
+    Action='lambda:InvokeFunction',
+    Principal='apigateway.amazonaws.com'
 )
 

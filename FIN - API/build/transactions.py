@@ -1,2 +1,7 @@
+import json
+
 def handler(event, context):
-    return "Wuu"
+    return {
+        "statusCode": 200,
+        "body": json.dumps("lambda :)")
+    }
