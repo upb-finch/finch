@@ -12,7 +12,7 @@ fi
 i=0 p=0 b=0 d=0
 
 CF_FILE="/tmp/cf_file.txt"
-DEPLOYMENTS_BUCKET="maudeployments"
+DEPLOYMENTS_BUCKET="finch-bucket-upb"
 
 case "$1" in
   -i|--install)
@@ -42,27 +42,34 @@ esac
 if [[ $i -eq 1 ]]; then
   mkdir -p build
   cp -r src/* build/
+  echo install
 fi
 
+#transformaciones del build
 if [[ $b -eq 1 ]]; then
-  
-aws cloudformation package \
+  aws cloudformation package \
   --template-file template.yaml \
   --s3-bucket $DEPLOYMENTS_BUCKET \
   --output-template-file $CF_FILE
-
+  
 fi
 
 if [[ $d -eq 1 ]]; then
-    
-aws cloudformation deploy \
+    aws cloudformation deploy \
   --no-fail-on-empty-changeset \
   --template-file $CF_FILE \
-  --parameter-overrides Project=cf_lab2  \
-  --stack-name "my-awesome-stack3" \
+  --parameter-overrides Project=finch  \
+  --stack-name "finch-transactions" \
   --capabilities CAPABILITY_NAMED_IAM
+    echo deploy    
 fi
 
 if [[ $r -eq 1 ]]; then
+    aws cloudformation deploy \
+  --no-fail-on-empty-changeset \
+  --template-file $CF_FILE \
+  --parameter-overrides Project=finch  \
+  --stack-name "finch-stack" \
+  --capabilities CAPABILITY_NAMED_IAM
     echo remove
 fi

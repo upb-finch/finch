@@ -2,19 +2,18 @@ AWSTemplateFormatVersion : '2010-09-09'
 Transform:
   - AWS::Serverless-2016-10-31
 
-# Parameters:
-#   BuketName: 
-#     Type: String
 Parameters:
   Project: 
     Type: String
+    
+# Template
 
 Description: my template
 Resources:
   MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: new-role-lambda-pls
+      RoleName: finch-role
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -39,26 +38,10 @@ Resources:
   MyLambda1:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: my-lambda-3
+      FunctionName: transactions
       Runtime: python3.6
       CodeUri: ./build
-      Handler: lambda1.handler
+      Handler: transactions.handler
       Timeout: 30
       MemorySize: 500
       Role: !GetAtt MyLambdaRole.Arn
-      Environment:
-         Variables:
-          MY_NAME : mauri
-  
-  MyLambda2:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: my-lambda-4
-      FunctionName: !Join [ "-", [!Ref Project, "lambda-1" ] ]  
-      Runtime: python3.6
-      CodeUri: ./build
-      Handler: lambda2.handler
-      Role: !GetAtt MyLambdaRole.Arn
-Outputs:
-  RoleARN:
-    Value: !GetAtt MyLambdaRole.Arn
