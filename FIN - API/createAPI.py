@@ -2,7 +2,7 @@ import boto3
 
 client = boto3.client('apigateway')
 lam = boto3.client('lambda')
-im = boto3.client('imagebuilder')
+glue = boto3.client('glue')
 
 response = client.create_rest_api(
     name='finch-API',
@@ -40,7 +40,7 @@ response4 = client.put_integration(
     restApiId = response['id'],
     resourceId = response3['id'],
     httpMethod = 'GET',
-    type='AWS',
+    type='AWS_PROXY',
     integrationHttpMethod='POST',
     uri='arn:aws:apigateway:us-east-2:lambda:path/2015-03-31/functions/'+arnl+'/invocations'
 )
@@ -53,9 +53,9 @@ deploy = client.create_deployment(
 print('https://'+response['id']+'.execute-api.us-east-2.amazonaws.com/prod')
 
 permi = lam.add_permission(
-    FunctionName=arnl,
-    StatementId='apigateway-finch-aws',
+    FunctionName='transactions',
+    StatementId='apigateway-finch-aws12',
     Action='lambda:InvokeFunction',
-    Principal='apigateway.amazonaws.com'
+    Principal='apigateway.amazonaws.com',
+    SourceArn='arn:aws:execute-api:us-east-2:591336854477:'+response['id']+'/prod/*'
 )
-
