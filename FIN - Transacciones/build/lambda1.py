@@ -1,4 +1,6 @@
 import boto3
+import json
+import decimal
 
 
 var AWS = require("aws-sdk");
@@ -44,59 +46,47 @@ docClient.put(params, function(err, data) {
 });
 
 #actualizar
-var m-made = 100;
-var m-sender = 50;
 
-// Update the item, unconditionally,
+# Helper class to convert a DynamoDB item to JSON.
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            if abs(o) % 1 > 0:
+                return float(o)
+            else:
+                return int(o)
+        return super(DecimalEncoder, self).default(o)
 
-var params = {
-    TableName:table,
-    Key:{
-        "m-made": 100,
-        "m-sender": 50 
-    },
-    UpdateExpression: "set info.rating = :r, info.plot=:p, info.actors=:a",
-    ExpressionAttributeValues:{
-        ":r":5.5,
-        ":p":"Everything happens all at once.",
-        ":a":["Larry", "Moe", "Curly"]
-    },
-    ReturnValues:"UPDATED_NEW"
-};
+dynamodb = boto3.resource('dynamodb', region_name='us-ohio-2', endpoint_url="http://localhost:8000")
 
-console.log("Updating the item...");
-docClient.update(params, function(err, data) {
-    if (err) {
-        console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
-    } else {
-        console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+table = dynamodb.Table('finch')
+
+m-made = 100
+m-send = 50
+
+response = table.put_item(
+   Item={
+        'm-made': m-made,
+        'm-send': m-send,
+        'info': {
+            'plot':"Nothing happens at all.",
+            'rating': decimal.Decimal(0)
+        }
     }
-});
+)
 
+print("PutItem succeeded:")
+print(json.dumps(response, indent=4, cls=DecimalEncoder))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#delete
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, decimal.Decimal):
+            if o % 1 > 0:
+                return float(o)
+            else:
+                return int(o)
+        return super(DecimalEncoder, self).default(o)
 
     return {
         "statusCode": 200,
