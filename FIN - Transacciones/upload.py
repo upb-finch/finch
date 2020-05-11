@@ -48,8 +48,8 @@ transaccion_data = [
     },
 ]
 
-with teacher_table.batch_writer() as batch:
-    for teacher in teacher_data:
+with transaccion_table.batch_writer() as batch:
+    for transaccion in transaccion_data:
         batch.put_item(
             Item=teacher
         )
