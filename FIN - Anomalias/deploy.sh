@@ -12,7 +12,7 @@ fi
 i=0 p=0 b=0 d=0
 
 CF_FILE="/tmp/cf_file.txt"
-DEPLOYMENTS_BUCKET="finch-bucket-upb"
+DEPLOYMENTS_BUCKET="saradeployments"
 
 case "$1" in
   -i|--install)
@@ -59,7 +59,7 @@ aws cloudformation deploy \
   --no-fail-on-empty-changeset \
   --template-file $CF_FILE \
   --parameter-overrides Project=finch  \
-  --stack-name "finch-stack-2" \
+  --stack-name "finch-stack-upb" \
   --capabilities CAPABILITY_NAMED_IAM
 fi
 

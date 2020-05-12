@@ -1,4 +1,6 @@
-import os
+import json
 
 def handler(event, context):
-    print("anomalias")
+    body = { "hola" : "mundo" }
+    
+    return event

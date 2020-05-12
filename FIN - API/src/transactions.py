@@ -2,9 +2,10 @@ import boto3
 import json
 import decimal
 from boto3.dynamodb.conditions import Key, Attr
-
+from datetime import datetime
 
 def handler(event, context):
+    lambda_client = boto3.client('lambda')
     dynamodb = boto3.resource('dynamodb')
     app= dynamodb.Table('finch')
     sender = event['queryStringParameters']['m-sender']
@@ -49,3 +50,10 @@ def handler(event, context):
             },
             ReturnValues="UPDATED_NEW"
         )
+        
+        msg = {"key":"new_invocation", "at": 55}
+        invoke_response = lambda_client.invoke(FunctionName="validations", InvocationType='RequestResponse', Payload=json.dumps(msg))
+        print('INVOKE', invoke_response)
+        t = invoke_response['Payload']
+        j = t.read()
+        print('HOLA', j)
