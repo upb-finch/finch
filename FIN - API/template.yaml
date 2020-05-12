@@ -13,7 +13,7 @@ Resources:
   MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: finch-role
+      RoleName: finch-role-1
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
