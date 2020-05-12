@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion : '2010-09-09'
+Transform:
+  - AWS::Serverless-2016-10-31
+
+Parameters:
+  Project: 
+    Type: String
+    
+# Template
+
+Description: my template
+Resources:
+  MyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: finch-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: finch-lambda-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+  MyLambda1:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: cache
+      Runtime: python3.6
+      CodeUri: ./build
+      Handler: cache.handler
+      Timeout: 30
+      MemorySize: 500
+      Role: !GetAtt MyLambdaRole.Arn

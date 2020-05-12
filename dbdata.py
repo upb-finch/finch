@@ -1,4 +1,5 @@
 import boto3
+from random import randint
  
 dynamodb = boto3.resource('dynamodb')
 finch_table = dynamodb.Table('finch')
@@ -12,8 +13,8 @@ finch_data = [
     },{
         "pk": "company-01",
         "sk": "client-01",
-        "CI": 7281,
-        "m-made": 10000
+        "CI": randint(1000000, 9999999),
+        "m-made": randint(0, 99999999999999)
     },{
         "pk": "transaccion-01",
         "sk": "client-01",
@@ -29,8 +30,8 @@ finch_data = [
     },{
         "pk": "company-01",
         "sk": "client-02",
-        "CI": 2564531,
-        "m-made": 3000
+        "CI": randint(1000000, 9999999),
+        "m-made": randint(0, 99999999999999)
     },{
         "pk": "transaccion-02",
         "sk": "client-01",

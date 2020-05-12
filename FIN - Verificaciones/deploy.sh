@@ -61,6 +61,7 @@ if [[ $d -eq 1 ]]; then
   --parameter-overrides Project=finch  \
   --stack-name "finch-transactions" \
   --capabilities CAPABILITY_NAMED_IAM
+  python dbcache.py
     echo deploy    
 fi
 
