@@ -51,9 +51,9 @@ def handler(event, context):
             ReturnValues="UPDATED_NEW"
         )
         
-        msg = {"key":send, "key2":sender, "at": 50}
+        msg = {"key":send, "key2":sender, "key3": receiver, "at": 50}
         invoke_response = lambda_client.invoke(FunctionName="validations", InvocationType='RequestResponse', Payload=json.dumps(msg))
         print('INVOKE', invoke_response)
         t = invoke_response['Payload']
         j = t.read()
-        print('HOLA', j)
+        print('ANOMALIA', j)
