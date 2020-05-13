@@ -13,7 +13,10 @@ Resources:
   MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: finch-role-1
+      RoleName: finch-role-02
+      ManagedPolicyArns: 
+        - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
+        - 'arn:aws:iam::666738236749:policy/LambdaInvoke'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -35,6 +38,7 @@ Resources:
             - logs:CreateLogStream
             - logs:PutLogEvents
             Resource: arn:aws:logs:*:*:*
+      
   MyLambda1:
     Type: AWS::Serverless::Function
     Properties:

@@ -57,3 +57,12 @@ def handler(event, context):
         t = invoke_response['Payload']
         j = t.read()
         print('ANOMALIA', j)
+        
+        body = {
+            "statusCode" : 200,
+            "response": "Se pudo realizar la transaccion"
+        } 
+    return {
+        "statusCode" : 200,
+        'body': json.dumps(body)
+    }

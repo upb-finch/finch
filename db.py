@@ -21,11 +21,37 @@ table = dynamodb.create_table(
 	    {
             'AttributeName': 'sk',
             'AttributeType': 'S'
+        },
+        {
+            'AttributeName': 'receiver',
+            'AttributeType': 'S'
         }
     ],
+    GlobalSecondaryIndexes=[
+        {
+            'IndexName': 'sk-receiver-index',
+            'KeySchema': [
+                {
+                    'AttributeName': 'sk',
+                    'KeyType': 'HASH'
+                },
+                { 
+                    'AttributeName': 'receiver',
+                    'KeyType': 'RANGE'
+                }
+            ],
+            'Projection': {
+                'ProjectionType': 'ALL'
+            },
+            'ProvisionedThroughput': {
+                'ReadCapacityUnits': 1,
+                'WriteCapacityUnits': 1
+            }
+        },
+    ],
     ProvisionedThroughput={
-        'ReadCapacityUnits': 5,
-        'WriteCapacityUnits': 5
+        'ReadCapacityUnits': 4,
+        'WriteCapacityUnits': 4
     }
 )
 

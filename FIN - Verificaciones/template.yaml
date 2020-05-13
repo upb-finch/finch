@@ -13,7 +13,9 @@ Resources:
   MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: finch-role
+      RoleName: finch-role-01
+      ManagedPolicyArns: 
+        - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:

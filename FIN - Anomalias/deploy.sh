@@ -12,7 +12,7 @@ fi
 i=0 p=0 b=0 d=0
 
 CF_FILE="/tmp/cf_file.txt"
-DEPLOYMENTS_BUCKET="saradeployments"
+DEPLOYMENTS_BUCKET="finch-bucket-upb"
 
 case "$1" in
   -i|--install)

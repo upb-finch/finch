@@ -59,9 +59,9 @@ if [[ $d -eq 1 ]]; then
   --no-fail-on-empty-changeset \
   --template-file $CF_FILE \
   --parameter-overrides Project=finch  \
-  --stack-name "finch-transactions" \
+  --stack-name "finch-cache" \
   --capabilities CAPABILITY_NAMED_IAM
-  python dbcache.py
+  #python dbcache.py
     echo deploy    
 fi
 
