@@ -1,6 +1,7 @@
 import boto3
 import json
 import decimal
+import random
 from boto3.dynamodb.conditions import Key, Attr
 from datetime import datetime
 
@@ -11,22 +12,20 @@ def handler(event, context):
     send = event['key']
     sender = event['key2']
     receiver = event['key3']
+    rand=random.randint(1, 100)
     
     rec = app.query(
         KeyConditionExpression=Key('pk').eq(sender)
     )
     
     body = { "send" :  float(send), "salario": float(rec["Items"][0]["salario"])}
-    body2 = {"message": "No hubo anomalia"}
-    
-    return {
-        'body': json.dumps(body2)
-    }
+    body2 = { "send" :  float(send), "money": float(rec['Items'][0]['money'])}
+    body4 = {"message": "No hubo anomalia"}
     
     if rec['Items'][0]['salario'] <= 2000 and send >= 20000:
         response = app.put_item(
             Item={
-                "pk": "transaccion-05",
+                "pk": "transaccion-"+str(rand),
                 "sk": sender,
                 "m-send": send,
                 "receiver": receiver,
@@ -37,4 +36,27 @@ def handler(event, context):
         
         return {
             'body': json.dumps(body)
+        }
+        
+    elif send >= 10000 and rec['Items'][0]['money'] <= 100:
+        response = app.put_item(
+            Item={
+                "pk": "transaccion-"+str(rand),
+                "sk": sender,
+                "m-send": send,
+                "receiver": receiver,
+                "succesful": True,
+                "anomalias ": "Anomalia 2"
+            }
+        )
+        
+        return {
+            'body': json.dumps(body2)
+        }
+        
+    #More than 5 transactions in a single day to the same account.
+        
+    else:
+        return {
+            'body': json.dumps(body4)
         }
