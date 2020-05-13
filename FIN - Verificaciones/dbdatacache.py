@@ -6,23 +6,27 @@ finch_table = dynamodb.Table('finch-cache')
  
 finch_data = [
     {
-        "pk": "company-01",
-        "sk": "client-01",
+        "pk": "client-01",
+        "sk": "company-01",
+        "name": "Enrique",
         "CI": randint(1000000, 9999999),
         "m-made": randint(0, 99999999999999)
     },{
-        "pk": "company-01",
-        "sk": "client-02",
+        "pk": "client-02",
+        "sk": "company-01",
+        "name": "Camila",
         "CI": randint(1000000, 9999999),
         "m-made": randint(0, 99999999999999)
     },{
-        "pk": "company-01",
-        "sk": "client-03",
+        "pk": "client-03",
+        "sk": "company-01",
+        "name": "Emmi",
         "CI": randint(1000000, 9999999),
         "m-made": randint(0, 99999999999999)
     },{
-        "pk": "company-01",
-        "sk": "client-04",
+        "pk": "client-04",
+        "sk": "company-01",
+        "name": "Sara",
         "CI": randint(1000000, 9999999),
         "m-made": randint(0, 99999999999999)
     },

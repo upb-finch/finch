@@ -84,18 +84,20 @@ deploy = client.create_deployment(
 
 print('https://'+response['id']+'.execute-api.us-east-2.amazonaws.com/prod')
 
+account_id = id = boto3.client('sts').get_caller_identity().get('Account')
+
 permi = lam.add_permission(
     FunctionName='transactions',
-    StatementId='apigateway-finch-aws4',
+    StatementId='apigateway-finch-aws20',
     Action='lambda:InvokeFunction',
     Principal='apigateway.amazonaws.com',
-    SourceArn='arn:aws:execute-api:us-east-2:591336854477:'+response['id']+'/prod/*'
+    SourceArn='arn:aws:execute-api:us-east-2:'+account_id+':'+response['id']+'/prod/*'
 )
 
 permi2 = lam.add_permission(
     FunctionName='cache',
-    StatementId='apigateway-finch-aws3',
+    StatementId='apigateway-finch-aws21',
     Action='lambda:InvokeFunction',
     Principal='apigateway.amazonaws.com',
-    SourceArn='arn:aws:execute-api:us-east-2:591336854477:'+response['id']+'/prod/*'
+    SourceArn='arn:aws:execute-api:us-east-2:'+account_id+':'+response['id']+'/prod/*'
 )
