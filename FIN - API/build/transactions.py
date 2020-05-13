@@ -2,15 +2,23 @@ import boto3
 import json
 import decimal
 from boto3.dynamodb.conditions import Key, Attr
-from datetime import datetime
 
 def handler(event, context):
     lambda_client = boto3.client('lambda')
     dynamodb = boto3.resource('dynamodb')
     app= dynamodb.Table('finch')
+    app2= dynamodb.Table('finch-cache')
     sender = event['queryStringParameters']['m-sender']
     send = event['queryStringParameters']['m-send']
     receiver = event['queryStringParameters']['m-receiver']
+    
+    ############## CACHE ##############
+    
+    cachedata = app2.query(
+        KeyConditionExpression=Key('pk').eq(sender)
+    )
+    
+    ###################################
 
     response = app.query(
         KeyConditionExpression=Key('pk').eq(sender)
@@ -19,11 +27,15 @@ def handler(event, context):
     rec = app.query(
         KeyConditionExpression=Key('pk').eq(receiver)
     )
-    
-    print(response)
 
     if response['Items'][0]['money'] < float(send): 
         body = {
+            "statusCode" : 200,
+            "Client code" : sender,
+            "Name": cachedata["Items"][0]["name"],
+            "Company" : cachedata["Items"][0]["sk"],
+            "CI": float(cachedata["Items"][0]["CI"]),
+            "Money made": float(cachedata["Items"][0]["m-made"]),
             "response": "No se puede realizar la transaccion"
         } 
     else:
@@ -56,4 +68,20 @@ def handler(event, context):
         print('INVOKE', invoke_response)
         t = invoke_response['Payload']
         j = t.read()
-        print('ANOMALIA', j)
+        newj = j.decode('utf-8')
+        d = json.dumps(newj)
+        print('ANOMALIA', d)
+        
+        body = {
+            "statusCode" : 200,
+            "response": "Se pudo realizar la transaccion",
+            "Client code" : sender,
+            "Name": cachedata["Items"][0]["name"],
+            "Company" : cachedata["Items"][0]["sk"],
+            "CI": float(cachedata["Items"][0]["CI"]),
+            "Money made": float(cachedata["Items"][0]["m-made"]),
+            "data": j.decode('utf-8')
+        } 
+    return {
+        "body": json.dumps(body)
+    }

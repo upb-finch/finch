@@ -2,10 +2,6 @@ AWSTemplateFormatVersion : '2010-09-09'
 Transform:
   - AWS::Serverless-2016-10-31
 
-Parameters:
-  Project: 
-    Type: String
-    
 # Template
 
 Description: my template
@@ -13,10 +9,9 @@ Resources:
   MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: finch-role-02
+      RoleName: finch-role-04
       ManagedPolicyArns: 
         - 'arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess'
-        - 'arn:aws:iam::666738236749:policy/LambdaInvoke'
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -38,7 +33,6 @@ Resources:
             - logs:CreateLogStream
             - logs:PutLogEvents
             Resource: arn:aws:logs:*:*:*
-      
   MyLambda1:
     Type: AWS::Serverless::Function
     Properties:
@@ -49,3 +43,17 @@ Resources:
       Timeout: 30
       MemorySize: 500
       Role: !GetAtt MyLambdaRole.Arn
+      
+  MyLambdaPolicy:
+    Type: AWS::IAM::Policy
+    Properties: 
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Effect: Allow
+          Action:
+          - lambda:InvokeFunction
+          Resource: "*"
+      PolicyName: LambdaInvoke
+      Roles: 
+        - finch-role-04
