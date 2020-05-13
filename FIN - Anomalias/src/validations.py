@@ -27,12 +27,12 @@ def handler(event, context):
     
     #return count
     
-    body = { "send" :  float(send), "salario": float(rec["Items"][0]["salario"])}
-    body2 = { "send" :  float(send), "money": float(rec['Items'][0]['money'])}
-    body3 = { "send" :  float(send), "count": "More than 5"}
+    body = { "message":"Hubo anomalia", "send" :  float(send), "salario": float(rec["Items"][0]["salario"])}
+    body2 = { "message":"Hubo anomalia", "send" :  float(send), "money": float(rec['Items'][0]['money'])}
+    body3 = { "message":"Hubo anomalia", "send" :  float(send), "count": "More than 5"}
     body4 = {"message": "No hubo anomalia"}
     
-    if rec['Items'][0]['salario'] <= 2000 and send >= 20000:
+    if float(rec['Items'][0]['salario']) <= 2000 and float(send) >= 20000:
         response = app.put_item(
             Item={
                 "pk": "transaccion-"+str(rand),
@@ -45,10 +45,11 @@ def handler(event, context):
         )
         
         return {
+            "statusCode" : 200,
             'body': json.dumps(body)
         }
         
-    elif send >= 10000 and rec['Items'][0]['money'] <= 100:
+    elif float(send) >= 10000 and float(rec['Items'][0]['money']) <= 100:
         response = app.put_item(
             Item={
                 "pk": "transaccion-"+str(rand),
@@ -61,10 +62,11 @@ def handler(event, context):
         )
         
         return {
+            "statusCode" : 200,
             'body': json.dumps(body2)
         }
         
-    elif count >= 5: #More than 5 transactions in a single day to the same account.
+    elif int(count) >= 5: #More than 5 transactions in a single day to the same account.
         response = app.put_item(
             Item={
                 "pk": "transaccion-"+str(rand),
@@ -77,6 +79,7 @@ def handler(event, context):
         )
         
         return {
+            "statusCode" : 200,
             'body': json.dumps(body3)
         }
         
@@ -93,5 +96,6 @@ def handler(event, context):
         )
         
         return {
+            "statusCode" : 200,
             'body': json.dumps(body4)
         }
