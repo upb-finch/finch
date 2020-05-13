@@ -9,7 +9,6 @@ finch_data = [
         "pk": "client-01",
         "sk": "Carlos",
         "money":100,
-        "c-transaccion": 1,
         "salario": 2000
     },{
         "pk": "company-01",
@@ -27,7 +26,6 @@ finch_data = [
         "pk": "client-02",
         "sk": "Alejandro",
         "money":3000,
-        "c-transaccion": 3,
         "salario": 10000
     },{
         "pk": "company-01",
