@@ -30,13 +30,12 @@ def handler(event, context):
 
     if response['Items'][0]['money'] < float(send): 
         body = {
-            "statusCode" : 200,
+            "response": "No se puede realizar la transaccion, no cuenta con los fondos suficientes",
             "Client code" : sender,
             "Name": cachedata["Items"][0]["name"],
             "Company" : cachedata["Items"][0]["sk"],
             "CI": float(cachedata["Items"][0]["CI"]),
-            "Money made": float(cachedata["Items"][0]["m-made"]),
-            "response": "No se puede realizar la transaccion"
+            "Money made": float(cachedata["Items"][0]["m-made"])
         } 
     else:
         response2 = app.update_item(
@@ -50,18 +49,42 @@ def handler(event, context):
             },
             ReturnValues="UPDATED_NEW"
         )
-        
-        response3 = app.update_item(
+        try:
+            response3 = app.update_item(
+                Key={
+                    'pk': rec['Items']['pk'],
+                    'sk': rec['Items'][0]['sk']
+                },
+                UpdateExpression="SET money = :r",
+                ExpressionAttributeValues={
+                    ':r': rec['Items'][0]['money'] + decimal.Decimal(send)
+                },
+                ReturnValues="UPDATED_NEW"
+            )
+        except:
+            response2 = app.update_item(
             Key={
-                'pk': rec['Items'][0]['pk'],
-                'sk': rec['Items'][0]['sk']
-            },
-            UpdateExpression="SET money = :r",
-            ExpressionAttributeValues={
-                ':r': rec['Items'][0]['money'] + decimal.Decimal(send)
-            },
-            ReturnValues="UPDATED_NEW"
-        )
+                    'pk': response['Items'][0]['pk'],
+                    'sk': response['Items'][0]['sk']
+                },
+                UpdateExpression="SET money = :r",
+                ExpressionAttributeValues={
+                    ':r': response['Items'][0]['money'] + decimal.Decimal(send)
+                },
+                ReturnValues="UPDATED_NEW"
+            )
+            body = {
+                "response": "No se puede realizar la transaccion, intente mas tarde",
+                "Client code" : sender,
+                "Name": cachedata["Items"][0]["name"],
+                "Company" : cachedata["Items"][0]["sk"],
+                "CI": float(cachedata["Items"][0]["CI"]),
+                "Money made": float(cachedata["Items"][0]["m-made"])
+            } 
+            return {
+                "body": json.dumps(body)
+            }
+        
         
         msg = {"key":send, "key2":sender, "key3": receiver, "at": 50}
         invoke_response = lambda_client.invoke(FunctionName="validations", InvocationType='RequestResponse', Payload=json.dumps(msg))
@@ -73,7 +96,6 @@ def handler(event, context):
         print('ANOMALIA', d)
         
         body = {
-            "statusCode" : 200,
             "response": "Se pudo realizar la transaccion",
             "Client code" : sender,
             "Name": cachedata["Items"][0]["name"],
