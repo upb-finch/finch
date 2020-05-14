@@ -39,6 +39,16 @@ finch_data = [
         "m-send": 3000,
         "succesful": False,
         "anomalias ": "Muchas"
+    },{
+        "pk": "client-03",
+        "sk": "Mariana",
+        "money":4500,
+        "salario": 67800
+    },{
+        "pk": "client-05",
+        "sk": "Andres",
+        "money":100,
+        "salario": 200
     },
 ]
  
