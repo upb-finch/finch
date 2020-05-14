@@ -34,6 +34,7 @@ def handler(event, context):
                 "CI": CI,
                 "m-made": mmade,
                 "name": name,
+                "timetolive": 1590753600
             }
         )
         

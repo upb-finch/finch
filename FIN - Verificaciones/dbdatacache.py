@@ -10,25 +10,29 @@ finch_data = [
         "sk": "company-01",
         "name": "Enrique",
         "CI": randint(1000000, 9999999),
-        "m-made": randint(0, 99999999999999)
+        "m-made": randint(0, 99999999999999),
+        "timetolive": 1590753600
     },{
         "pk": "client-02",
         "sk": "company-01",
         "name": "Camila",
         "CI": randint(1000000, 9999999),
-        "m-made": randint(0, 99999999999999)
+        "m-made": randint(0, 99999999999999),
+        "timetolive": 1590753600
     },{
         "pk": "client-03",
         "sk": "company-01",
         "name": "Emmi",
         "CI": randint(1000000, 9999999),
-        "m-made": randint(0, 99999999999999)
+        "m-made": randint(0, 99999999999999),
+        "timetolive": 1590753600
     },{
         "pk": "client-04",
         "sk": "company-01",
         "name": "Sara",
         "CI": randint(1000000, 9999999),
-        "m-made": randint(0, 99999999999999)
+        "m-made": randint(0, 99999999999999),
+        "timetolive": 1590753600
     },
 ]
  
