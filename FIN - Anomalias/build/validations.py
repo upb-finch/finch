@@ -13,6 +13,7 @@ def handler(event, context):
     sender = event['key2']
     receiver = event['key3']
     rand=random.randint(1, 100)
+    anomaly = []
     
     rec = app.query(
         KeyConditionExpression=Key('pk').eq(sender)
@@ -25,73 +26,31 @@ def handler(event, context):
     
     count = len(responseCont['Items'])+1
     
-    #return count
+    body = {"message": "La transaccion fue realizada con exito"}
     
-    body = { "send" :  float(send), "salario": float(rec["Items"][0]["salario"])}
-    body2 = { "send" :  float(send), "money": float(rec['Items'][0]['money'])}
-    body3 = { "send" :  float(send), "count": "More than 5"}
-    body4 = {"message": "No hubo anomalia"}
-    
-    if rec['Items'][0]['salario'] <= 2000 and send >= 20000:
-        response = app.put_item(
-            Item={
-                "pk": "transaccion-"+str(rand),
-                "sk": sender,
-                "m-send": send,
-                "receiver": receiver,
-                "succesful": True,
-                "anomalias ": "Anomalia 1"
-            }
-        )
+    if float(rec['Items'][0]['salario']) <= 2000 and float(send) >= 20000:
+        anomaly.append('more than 20000$ for people who earn less than 2000$ a month')
+
         
-        return {
-            'body': json.dumps(body)
+    if float(send) >= 10000 and float(rec['Items'][0]['money']) <= 100:
+        anomaly.append('higher than 10000$ that leave the sender with less than 100$')
+
+        
+    if int(count) >= 5:
+        anomaly.append('More than 5 transactions in a single day to the same account')
+
+
+    response = app.put_item(
+        Item={
+            "pk": "transaccion-"+str(rand),
+            "sk": sender,
+            "m-send": send,
+            "receiver": receiver,
+            "succesful": True,
+            "anomalias ": anomaly
         }
+    )
         
-    elif send >= 10000 and rec['Items'][0]['money'] <= 100:
-        response = app.put_item(
-            Item={
-                "pk": "transaccion-"+str(rand),
-                "sk": sender,
-                "m-send": send,
-                "receiver": receiver,
-                "succesful": True,
-                "anomalias ": "Anomalia 2"
-            }
-        )
-        
-        return {
-            'body': json.dumps(body2)
-        }
-        
-    elif count >= 5: #More than 5 transactions in a single day to the same account.
-        response = app.put_item(
-            Item={
-                "pk": "transaccion-"+str(rand),
-                "sk": sender,
-                "m-send": send,
-                "receiver": receiver,
-                "succesful": True,
-                "anomalias ": "Anomalia 3"
-            }
-        )
-        
-        return {
-            'body': json.dumps(body3)
-        }
-        
-    else:
-        response = app.put_item(
-            Item={
-                "pk": "transaccion-"+str(rand),
-                "sk": sender,
-                "m-send": send,
-                "receiver": receiver,
-                "succesful": True,
-                "anomalias ": "No hay"
-            }
-        )
-        
-        return {
-            'body': json.dumps(body4)
-        }
+    return {
+        'body': json.dumps(body)
+    }

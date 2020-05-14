@@ -52,7 +52,7 @@ def handler(event, context):
         try:
             response3 = app.update_item(
                 Key={
-                    'pk': rec['Items']['pk'],
+                    'pk': rec['Items'][0]['pk'],
                     'sk': rec['Items'][0]['sk']
                 },
                 UpdateExpression="SET money = :r",

@@ -2,12 +2,6 @@ AWSTemplateFormatVersion : '2010-09-09'
 Transform:
   - AWS::Serverless-2016-10-31
 
-Parameters:
-  Project: 
-    Type: String
-    
-# Template
-
 Description: my template
 Resources:
   MyLambdaRole:
@@ -47,3 +41,4 @@ Resources:
       Timeout: 30
       MemorySize: 500
       Role: !GetAtt MyLambdaRole.Arn
+

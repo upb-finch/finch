@@ -42,7 +42,6 @@ esac
 if [[ $i -eq 1 ]]; then
   mkdir -p build
   cp -r src/* build/
-  echo install
 fi
 
 #transformaciones del build
@@ -51,7 +50,6 @@ if [[ $b -eq 1 ]]; then
   --template-file template.yaml \
   --s3-bucket $DEPLOYMENTS_BUCKET \
   --output-template-file $CF_FILE
-  
 fi
 
 if [[ $d -eq 1 ]]; then
@@ -61,8 +59,6 @@ if [[ $d -eq 1 ]]; then
   --parameter-overrides Project=finch  \
   --stack-name "finch-cache" \
   --capabilities CAPABILITY_NAMED_IAM
-  #python dbcache.py
-    echo deploy    
 fi
 
 if [[ $r -eq 1 ]]; then
@@ -70,7 +66,7 @@ if [[ $r -eq 1 ]]; then
   --no-fail-on-empty-changeset \
   --template-file $CF_FILE \
   --parameter-overrides Project=finch  \
-  --stack-name "finch-stack" \
+  --stack-name "finch-cache" \
   --capabilities CAPABILITY_NAMED_IAM
     echo remove
 fi
