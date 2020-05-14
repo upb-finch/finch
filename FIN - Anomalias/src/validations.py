@@ -26,8 +26,6 @@ def handler(event, context):
     
     count = len(responseCont['Items'])+1
     
-    body = {"message": "La transaccion fue realizada con exito"}
-    
     if float(rec['Items'][0]['salario']) <= 2000 and float(send) >= 20000:
         anomaly.append('more than 20000$ for people who earn less than 2000$ a month')
 
@@ -50,7 +48,12 @@ def handler(event, context):
             "anomalias ": anomaly
         }
     )
-        
+    
+    body = {
+        "message": "La transaccion fue realizada con exito",
+        "anomaly": anomaly
+    }
+    
     return {
         'body': json.dumps(body)
     }
